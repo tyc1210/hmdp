@@ -7,9 +7,15 @@ import com.hmdp.mapper.ShopMapper;
 import com.hmdp.service.ICacheService;
 import com.hmdp.service.IShopService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.hmdp.utils.CacheClient;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+
+import java.util.concurrent.TimeUnit;
+
+import static com.hmdp.common.RedisConstant.CACHE_SHOP;
+import static com.hmdp.common.RedisConstant.CACHE_SHOP_LOCK;
 
 /**
  * <p>
@@ -24,19 +30,13 @@ public class ShopServiceImpl extends ServiceImpl<ShopMapper, Shop> implements IS
     @Resource
     private ICacheService cacheService;
 
+    @Resource
+    private CacheClient cacheClient;
+
     @Override
     public Shop getById(Long id){
-        // 先从缓存获取
-        Shop cacheShop = cacheService.getShopById(id);
-        if(null != cacheShop){
-            return cacheShop;
-        }
-        // 不存在则从数据库获取并放入缓存
-        Shop shop = getById(id);
-        if(null == shop){
-            throw new BaseException("商铺不存在");
-        }
-        cacheService.saveShop(shop);
+        Shop shop = cacheClient
+                .queryWithLogicalExpire(CACHE_SHOP,id,Shop.class,this::getById,30L, TimeUnit.MINUTES,CACHE_SHOP_LOCK);
         return shop;
     }
 

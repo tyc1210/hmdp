@@ -19,5 +19,10 @@ public class RedisConstant {
     /**
      * 商铺信息
      */
-    public static String SHOP = "shop:%s";
+    public static String CACHE_SHOP = "shop:";
+
+    /**
+     * 商铺锁
+     */
+    public static String CACHE_SHOP_LOCK = "shop:lock:";
 }
