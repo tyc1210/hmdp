@@ -20,13 +20,15 @@ public class MvcConfig implements WebMvcConfigurer {
         // 添加登录拦截器
         registry.addInterceptor(new LoginInterceptor())
                 .excludePathPatterns(
-                        "/shop/**",
-                        "/voucher/**",
-                        "/shop-type/**",
-                        "/upload/**",
-                        "/blog/hot",
                         "/user/code",
                         "/user/login"
+                ).addPathPatterns(
+                "/shop/**",
+                "/voucher/**",
+                "/voucher-order/**",
+                "/shop-type/**",
+                "/upload/**",
+                "/blog/hot"
                 ).order(1);
     }
 }

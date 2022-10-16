@@ -1,5 +1,6 @@
 package com.hmdp.utils;
 
+import com.hmdp.dto.UserDTO;
 import io.jsonwebtoken.*;
 import org.springframework.util.StringUtils;
 
@@ -24,6 +25,25 @@ public class JwtHelper {
                 .compact();
         return token;
     }
+
+    public static UserDTO getUserDto(String token){
+        if(StringUtils.isEmpty(token)){
+            return null;
+        }
+        Jws<Claims> claimsJws = null;
+        try {
+            claimsJws = Jwts.parser().setSigningKey(tokenSignKey).parseClaimsJws(token);
+        } catch (Exception e) {
+            return null;
+        }
+        Claims claims = claimsJws.getBody();
+        UserDTO userDTO = new UserDTO();
+        userDTO.setId(Long.parseLong(claims.get("userId").toString()));
+        userDTO.setNickName(claims.get("userName").toString());
+        return userDTO;
+    }
+
+
 
     public static Long getUserId(String token){
         if(StringUtils.isEmpty(token)){

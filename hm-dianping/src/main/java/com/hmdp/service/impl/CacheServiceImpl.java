@@ -52,7 +52,7 @@ public class CacheServiceImpl implements ICacheService {
 
     @Override
     public Shop getShopById(Long id) {
-        String strShop = stringRedisTemplate.opsForValue().get(String.format(SHOP,id));
+        String strShop = stringRedisTemplate.opsForValue().get(String.format(CACHE_SHOP,id));
         if(StringUtils.isEmpty(strShop)){
             return null;
         }
@@ -61,6 +61,6 @@ public class CacheServiceImpl implements ICacheService {
 
     @Override
     public void saveShop(Shop shop) {
-        stringRedisTemplate.opsForValue().set(String.format(SHOP,shop.getId()),JSONUtil.toJsonStr(shop),30,TimeUnit.MINUTES);
+        stringRedisTemplate.opsForValue().set(String.format(CACHE_SHOP,shop.getId()),JSONUtil.toJsonStr(shop),30,TimeUnit.MINUTES);
     }
 }

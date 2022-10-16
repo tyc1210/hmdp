@@ -34,9 +34,9 @@ public class ShopServiceImpl extends ServiceImpl<ShopMapper, Shop> implements IS
     private CacheClient cacheClient;
 
     @Override
-    public Shop getById(Long id){
+    public Shop findById(Long id){
         Shop shop = cacheClient
-                .queryWithLogicalExpire(CACHE_SHOP,id,Shop.class,this::getById,30L, TimeUnit.MINUTES,CACHE_SHOP_LOCK);
+                .queryWithLogicalExpire(CACHE_SHOP,id,Shop.class,id1->getById(id1),30L, TimeUnit.MINUTES,CACHE_SHOP_LOCK);
         return shop;
     }
 
