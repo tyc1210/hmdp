@@ -13,6 +13,9 @@ import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 import javax.validation.Valid;
 
+/**
+ * 用户个人中心相关
+ */
 @Slf4j
 @RestController
 @RequestMapping("/user")
@@ -23,9 +26,6 @@ public class UserController {
 
     @Resource
     private IUserInfoService userInfoService;
-
-    @Resource
-    private ICacheService cacheService;
 
     /**
      * 发送手机验证码
