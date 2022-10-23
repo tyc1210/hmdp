@@ -24,32 +24,16 @@ public class BlogController {
 
     @Resource
     private IBlogService blogService;
-    @Resource
-    private IUserService userService;
 
+    // 发布
     @PostMapping
     public Result saveBlog(@RequestBody Blog blog) {
-        // 获取登录用户
-        UserDTO user = UserHolder.getUser();
-        blog.setUserId(user.getId());
-        // 保存探店博文
-        blogService.save(blog);
-        // 返回id
-        return Result.ok(blog.getId());
+        return blogService.saveBlog(blog);
     }
 
     @GetMapping("/{id}")
     public Result getById(@PathVariable Long id){
         return Result.ok(blogService.queryById(id));
-    }
-
-    /**
-     * 点赞
-     */
-    @PutMapping("/like/{id}")
-    public Result likeBlog(@PathVariable("id") Long id) {
-        blogService.like(id);
-        return Result.ok();
     }
 
     /**
@@ -60,6 +44,7 @@ public class BlogController {
         return Result.ok(blogService.getLikedBlogUsers(id));
     }
 
+    // 查询我的发布
     @GetMapping("/of/me")
     public Result queryMyBlog(@RequestParam(value = "current", defaultValue = "1") Integer current) {
         // 获取登录用户
@@ -72,8 +57,15 @@ public class BlogController {
         return Result.ok(records);
     }
 
+    // 查询热榜
     @GetMapping("/hot")
     public Result queryHotBlog(@RequestParam(value = "current", defaultValue = "1") Integer current) {
         return Result.ok(blogService.getHot(current));
+    }
+
+    // 查询我的关注发布内容
+    @GetMapping("of/follow")
+    public Result getFollowsBlog(@RequestParam("lastId")Long max, @RequestParam(value = "offset",defaultValue = "0")Integer offset){
+        return blogService.getFollowsBlog(max,offset);
     }
 }
